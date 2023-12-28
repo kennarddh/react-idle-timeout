@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { Pacman } from '@kennarddh/react-spinner'
+import '@kennarddh/react-spinner/build/style.css'
 import { useIdleTimer } from 'react-idle-timer'
 
 const timeout = 10_000
@@ -15,24 +17,17 @@ const App = () => {
 	const [State, SetState] = useState<IState>(IState.Active)
 	const [RemainingTimeUntilIdle, SetRemainingTimeUntilIdle] =
 		useState<number>(0)
-	const [PromptOpen, SetPromptOpen] = useState<boolean>(false)
 
 	const OnIdle = () => {
 		SetState(IState.Idle)
-
-		SetPromptOpen(false)
 	}
 
 	const OnActive = () => {
 		SetState(IState.Active)
-
-		SetPromptOpen(false)
 	}
 
 	const OnPrompt = () => {
 		SetState(IState.Prompted)
-
-		SetPromptOpen(true)
 	}
 
 	const { getRemainingTime, activate } = useIdleTimer({
@@ -77,12 +72,26 @@ const App = () => {
 			<div
 				className='modal'
 				style={{
-					display: PromptOpen ? 'flex' : 'none',
+					display: State === IState.Prompted ? 'flex' : 'none',
 				}}
 			>
 				<h3>Are you still here?</h3>
 				<p>Logging out in {RemainingTimeUntilIdle} seconds</p>
 				<button onClick={HandleStillHere}>Im still here</button>
+			</div>
+			<div
+				className='spinner'
+				style={{
+					display: State === IState.Idle ? 'flex' : 'none',
+					width: '100vw',
+					height: '100svh',
+					alignContent: 'center',
+					justifyContent: 'center',
+					position: 'absolute',
+					inset: 0,
+				}}
+			>
+				<Pacman />
 			</div>
 		</>
 	)
